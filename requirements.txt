@@ -1,10 +1,10 @@
 # Movie Insights - Dependencies
 
 # Scene Detection
-scenedetect[opencv]>=0.6.2
+scenedetect>=0.6.2
 
 # Video Processing
-opencv-python>=4.8.0
+opencv-python-headless>=4.8.0
 
 # Excel Export
 openpyxl>=3.1.2
