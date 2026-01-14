@@ -2,6 +2,8 @@
 
 動画をAIでシーン分割して、提案スライド素材に変換するツール
 
+**Live Demo**: https://movieinsights.streamlit.app/
+
 ## 機能
 
 - 動画ファイルをアップロード
