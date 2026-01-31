@@ -1,4 +1,4 @@
- """                                                                                                           
+"""                                                                                                           
   Movie Insights - Streamlit Web UI                                                                             
   動画シーン分析アプリケーション                                                                                
   """                                                                                                           
