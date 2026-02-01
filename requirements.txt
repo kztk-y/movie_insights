@@ -1,20 +1,11 @@
-# Movie Insights - Dependencies
+# Movie Insights - Dependencies (version locked)
 
-# Scene Detection
-scenedetect>=0.6.2
-
-# Video Processing
-opencv-python-headless>=4.8.0
-
-# Excel Export
-openpyxl>=3.1.2
-Pillow>=10.0.0
-
-# PowerPoint Export
-python-pptx>=0.6.21
-
-# Web UI
-streamlit>=1.28.0
-
-# CLI
-click>=8.1.0
+scenedetect==0.6.4
+opencv-python-headless==4.9.0.80
+openpyxl==3.1.2
+Pillow==10.2.0
+python-pptx==0.6.23
+streamlit==1.31.0
+numpy==1.26.4
+pandas==2.2.0
+click==8.1.7
