@@ -128,8 +128,11 @@ def main():
 
             # 分析開始ボタン
             if st.button("🔍 シーン分析を開始", type="primary"):
-                # 分析処理
-                with st.spinner("シーンを検出中..."):
+                try:
+                    # 分析処理
+                    status_text = st.empty()
+                    status_text.info("シーンを検出中...")
+
                     if use_custom:
                         insights = MovieInsights(
                             threshold=threshold,
@@ -142,15 +145,19 @@ def main():
                         insights = MovieInsights(mode=detection_mode)
                     scenes = insights.detect_scenes(video_path)
 
-                if not scenes:
-                    st.warning("シーンが検出されませんでした。閾値を下げてみてください。")
-                    return
+                    if not scenes:
+                        st.warning("シーンが検出されませんでした。閾値を下げてみてください。")
+                        return
 
-                st.success(f"✅ {len(scenes)} シーンを検出しました")
-
-                # サムネイル抽出
-                with st.spinner("サムネイルを抽出中..."):
+                    status_text.info("サムネイルを抽出中...")
                     insights.extract_thumbnails(output_dir)
+                    status_text.success(f"✅ {len(scenes)} シーンを検出しました")
+
+                except Exception as e:
+                    st.error(f"エラーが発生しました: {type(e).__name__}: {e}")
+                    import traceback
+                    st.code(traceback.format_exc())
+                    return
 
                 video_info = insights.get_video_info()
 
