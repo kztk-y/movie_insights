@@ -54,13 +54,14 @@ def main():
                 "standard": "⚖️ 標準（バランス重視）",
                 "low": "🎯 低感度（誤検出を減らす）"
             }[x],
-            index=0,
+            index=0,  # デフォルトを高感度に
             help="高感度: カットを見逃しにくい / 低感度: 誤検出が少ない"
         )
 
         st.markdown("---")
         st.markdown("#### 詳細設定")
 
+        # 詳細設定（モードを上書き）
         use_custom = st.checkbox("カスタム設定を使用", value=False)
 
         if use_custom:
@@ -113,23 +114,27 @@ def main():
     )
 
     if uploaded_file:
+        # 一時ディレクトリを作成
         temp_dir = tempfile.mkdtemp()
         video_path = os.path.join(temp_dir, uploaded_file.name)
         output_dir = os.path.join(temp_dir, "frames")
 
         try:
+            # 動画を一時ファイルに保存
             with open(video_path, "wb") as f:
                 f.write(uploaded_file.read())
 
             st.success(f"📹 {uploaded_file.name} をアップロードしました")
 
+            # 分析開始ボタン
             if st.button("🔍 シーン分析を開始", type="primary"):
+                # 分析処理
                 with st.spinner("シーンを検出中..."):
                     if use_custom:
                         insights = MovieInsights(
                             threshold=threshold,
                             min_scene_len=min_scene_len,
-                            mode=None,
+                            mode=None,  # カスタム設定
                             use_adaptive=use_adaptive,
                             use_threshold_detector=use_threshold,
                         )
@@ -143,11 +148,13 @@ def main():
 
                 st.success(f"✅ {len(scenes)} シーンを検出しました")
 
+                # サムネイル抽出
                 with st.spinner("サムネイルを抽出中..."):
                     insights.extract_thumbnails(output_dir)
 
                 video_info = insights.get_video_info()
 
+                # 結果表示
                 st.markdown("---")
                 st.subheader("📊 動画情報")
 
@@ -157,9 +164,11 @@ def main():
                 col3.metric("総フレーム数", f"{video_info['total_frames']:,}")
                 col4.metric("検出シーン数", len(scenes))
 
+                # シーン一覧
                 st.markdown("---")
                 st.subheader("🎞️ シーン一覧")
 
+                # グリッド表示
                 cols_per_row = 4
                 for i in range(0, len(scenes), cols_per_row):
                     cols = st.columns(cols_per_row)
@@ -176,11 +185,13 @@ def main():
                                     f"({scene.duration:.1f}秒)"
                                 )
 
+                # ダウンロードセクション
                 st.markdown("---")
                 st.subheader("📥 ダウンロード")
 
                 download_cols = st.columns(3)
 
+                # Excel
                 if export_excel:
                     excel_path = os.path.join(temp_dir, "scene_report.xlsx")
                     export_to_excel(scenes, video_info, excel_path)
@@ -192,6 +203,7 @@ def main():
                             mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
                         )
 
+                # PowerPoint
                 if export_pptx:
                     pptx_path = os.path.join(temp_dir, "scene_slides.pptx")
                     export_to_pptx(scenes, video_info, pptx_path)
@@ -203,6 +215,7 @@ def main():
                             mime="application/vnd.openxmlformats-officedocument.presentationml.presentation"
                         )
 
+                # ZIP
                 if export_zip:
                     zip_path = os.path.join(temp_dir, "scene_images.zip")
                     export_images_zip(scenes, zip_path)
@@ -215,9 +228,13 @@ def main():
                         )
 
         finally:
+            # セッションが終わったら一時ディレクトリを削除
+            # Note: Streamlitはファイルダウンロード後も状態を保持するため
+            # ここでは削除しない（ユーザーが再ダウンロードできるように）
             pass
 
     else:
+        # アップロード前の説明
         st.markdown("""
         ### 使い方
 
