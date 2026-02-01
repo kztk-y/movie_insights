@@ -9,7 +9,8 @@ from pathlib import Path
 from typing import Optional, List
 
 import cv2
-from scenedetect import open_video, SceneManager, ContentDetector, AdaptiveDetector, ThresholdDetector
+from scenedetect import open_video, ContentDetector, AdaptiveDetector, ThresholdDetector
+from scenedetect.scene_manager import SceneManager
 
 
 @dataclass
